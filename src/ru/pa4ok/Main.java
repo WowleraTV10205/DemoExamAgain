@@ -21,6 +21,13 @@ public class Main
             метод должен удалить все книги автора
             и самого автора из сета
             возвращаемое значение - колво удаленных книг
+        - public void sortBooksByPages(boolean reverse)
+            сортирует books, если reverse == false, то от меньшего к большему
+            если reverse == true - наоборот
+        - public void sortBooksByTitle()
+            сортирует книги по алфавиту (название)
+        - public void shuffle()
+            рандомно размешивает коллекции
 
         Author
         - String name
@@ -33,157 +40,60 @@ public class Main
 
     public static void main(String[] args)
     {
-        //int float long double boolean char //0, false, ''
-        //Integer Float Long Double Boolean Character //null
+        List<TestClass> list = new ArrayList<>();
 
-        /*List<TestClass> list = new ArrayList<>();
-
-        list.add(new TestClass());
-        list.add(new TestClass());
-        list.add(new TestClass(55));
-        list.add(new TestClass());
-        list.add(new TestClass());
-
-
-        System.out.println(list);*/
-
-        //list.remove(1); //удаление по индексу
-        //list.remove(new TestClass(55)); //удаление по объекту
-
-        //TestClass t = list.get(4);
-        //list.size();
-        //list.clear();
-        //list.isEmpty();
-        //list.contains(new TestClass(55));
-
-        //java 9+
-        //List<String> l1 = List.of(...);
-
-        //java 8
-        //тут будет ошибка из-за того что Arrays.asList возвращает реализацию List без части методов
-        //List<String> l1 = Arrays.asList("grrgerggr", "frfrerfeerfg");
-        //l1.add("grtgregrgereg");
-        //можно исправить обернув в ArrayList
-        //List<String> l1 = new ArrayList<>(Arrays.asList("grrgerggr", "frfrerfeerfg"));
-        //l1.add("grtgregrgereg");
-        //System.out.println(l1);
-
-        //System.out.println(list);
-
-        /*ClassWithList1 classWithList1 = new ClassWithList1();
-        classWithList1.list.add(new TestClass());
-
-        ClassWithList4 classWithList4 = new ClassWithList4();
-        ClassWithList4 ClassWithList4d1 = new ClassWithList4(new TestClass());
-        ClassWithList4 ClassWithList4d2 = new ClassWithList4(new TestClass(), new TestClass(), new TestClass());*/
-
-        //проблема удаления объектов из коллекции при ее переборе
-
-        //ConcurrentModificationException
-        /*for(TestClass t : list) {
-            if(t.getI() > 500) {
-                list.remove(t);
-            }
-        }*/
-
-        //OutOfBoundsException + пропускаем элементы после удаления
-        /*int size = list.size();
-        for(int i=0; i<size; i++) {
-            TestClass t = list.get(i);
-            if(t.getI() > 500) {
-                list.remove(i);
-            }
-        }*/
-
-        //вариант 1, разворот цикла с конца в начало
-        /*int size = list.size();
-        for(int i=size-1; i>=0; i--) {
-            TestClass t = list.get(i);
-            if(t.getI() > 500) {
-                list.remove(i);
-            }
-        }*/
-
-        //вариант 2, временная коллекция
-        /*List<TestClass> toRemove = new ArrayList<>();
-        for(TestClass t : list) {
-            if(t.getI() > 500) {
-                toRemove.add(t);
-            }
+        for(int i=0; i<10; i++) {
+            list.add(new TestClass());
         }
-        list.removeAll(toRemove);*/
 
-        //вариант 3, прокаченный вариант 2
-        //list.removeIf(testClass -> testClass.getI() > 500);
-
-        //System.out.println(list);
+        System.out.println(list);
 
         /*
-            Set - коллекция похожая на List
-            у нее нет части методов и она не хранит повторяющиеся объекты
-            в сете не оригинальный порядок хранения элементов
+            есть 2 варианта сортировки
+            первый - мы передаем коллекцию и компаратор
+            подходит в ситуациях, когда есть много разных вариантов сортировки
+            второй - мы передаем только коллекцию
+            но класс хранящийся в коллекции обязан реализовывать интерфейс Comparable
+            подходит, когда коллеция с опр. типом всегда сортируется одинаково
          */
 
-        Set<TestClass> set = new HashSet<>();
-        set.add(new TestClass());
-        set.add(new TestClass());
-        set.add(new TestClass(55));
-        set.add(new TestClass(55));
-        set.add(new TestClass());
-        set.add(new TestClass());
-        System.out.println(set);
+        /*Collections.sort(list, new Comparator<TestClass>() {
+            @Override
+            public int compare(TestClass o1, TestClass o2) {
+                //-1 o1 < o2
+                //0 o1 == o2
+                //1 o1 > o2
+                return Integer.compare(o1.getI(), o2.getI());
+            }
+        });*/
 
-        for(TestClass t : set) {
-            //...
-        }
+        //тоже самое что и сверху
+        //Collections.sort(list, (o1, o2) -> Integer.compare(o1.getI(), o2.getI()));
 
-        boolean hasRemoved = set.remove(new TestClass(55));
-        boolean hasAdded = set.add(new TestClass(55));
+        //опять тоже самое
+        //Collections.sort(list, Comparator.comparingInt(TestClass::getI));
 
-        List<TestClass> list = new ArrayList<>(set);
+        Collections.sort(list);
+        System.out.println(list);
+
+        //рандомно размешивает коллекцию
+        Collections.shuffle(list);
+        System.out.println(list);
+
+        //строки сравниваются через интерфейс Comparable
+        //через вызов метода compareTo у 1 из строк
+        /*Collections.sort(list, new Comparator<TestClass>() {
+            @Override
+            public int compare(TestClass o1, TestClass o2) {
+                String s1 = "efgegfreg";
+                String s2 = "jytkjytu";
+                return s1.compareTo(s2);
+            }
+        });*/
     }
 }
 
-class ClassWithList1
-{
-    public List<TestClass> list = new ArrayList<>();
-
-    public ClassWithList1() {
-    }
-}
-
-class ClassWithList2
-{
-    public List<TestClass> list;
-
-    public ClassWithList2(List<TestClass> list) {
-        this.list = list;
-    }
-
-    public ClassWithList2() {
-        this(new ArrayList<>());
-    }
-}
-
-class ClassWithList3
-{
-    public List<TestClass> list;
-
-    public ClassWithList3(TestClass[] testClasses) {
-        list = new ArrayList<>(Arrays.asList(testClasses));
-    }
-}
-
-class ClassWithList4
-{
-    public List<TestClass> list;
-
-    public ClassWithList4(TestClass... testClasses) {
-        list = new ArrayList<>(Arrays.asList(testClasses));
-    }
-}
-
-class TestClass
+class TestClass implements Comparable<TestClass>
 {
     private int i;
 
@@ -193,6 +103,11 @@ class TestClass
 
     public TestClass() {
         this(new Random().nextInt(1000));
+    }
+
+    @Override
+    public int compareTo(TestClass o) {
+        return Integer.compare(this.i, o.getI());
     }
 
     @Override
