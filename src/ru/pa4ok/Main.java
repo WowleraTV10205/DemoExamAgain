@@ -11,92 +11,47 @@ public class Main
 
     public static void main(String[] args)
     {
-        //int float double boolean long char //0, false, ''
-        //Integer Float Double Boolean Long Character //null
+        List<TestClass> list = new ArrayList<>();
 
-        /*List<TestClass> list = new ArrayList<>();
-
-        list.add(new TestClass());
-        list.add(new TestClass());
-        list.add(new TestClass());
-        list.add(new TestClass());
-        TestClass test = new TestClass();
-        list.add(test);
-        //System.out.println(list);
-
-        list.remove(2); //удаление по индексу
-        list.remove(test); //удаление по объекту*/
-
-        //int size = list.size();
-        //list.clear();
-        //boolean isEmpty = list.isEmpty();
-        //boolean contains = list.contains(test);
-
-        //System.out.println(list);
-
-        /*for(TestClass t : list)
-        {
-            t.setI(t.getI() + 100);
-        }*/
-
-        /*for(int i=0; i<list.size(); i++)
-        {
-            TestClass t = list.get(i);
-            t.setI(t.getI() + 100);
-        }*/
-
-        //3 способа удаления элементов из списка при его переборе
-
-        //1 способ, развернуть цикл
-        /*for(int i=list.size()-1; i>=0; i--)
-        {
-            TestClass t = list.get(i);
-            if(i == 1) {
-                list.remove(1);
-            }
-        }*/
-
-        //2 временная коллекция для удаления
-        /*List<TestClass> toRemove = new ArrayList<>();
-        for(TestClass t : list) {
-            if(t.getI() > 500) {
-                toRemove.add(t);
-            }
+        for(int i=0; i<10; i++) {
+            list.add(new TestClass());
         }
-        list.removeAll(toRemove);*/
 
-        //3 removeIf
-        //list.removeIf(testClass -> testClass.getI() > 500);
+        System.out.println(list);
 
-        //System.out.println(list);
+        //вариант 1, не требует ничего дополнительного
+        /*Collections.sort(list, new Comparator<TestClass>() {
+            @Override
+            public int compare(TestClass o1, TestClass o2) {
+                //-1 o1 < 02
+                //0 o1 == o2
+                //1 o1 > o2
+                return Integer.compare(o1.getI(), o2.getI());
+            }
+        });
 
+        //одинаковый код с тем что выше
+        Collections.sort(list, (o1, o2) -> Integer.compare(o1.getI(), o2.getI()));
 
-        //абсолютно такой же список, но
-        //не могут храниться повторяющиеся элементы
-        Set<TestClass> set = new HashSet<>();
+        //опять одинаковый
+        Collections.sort(list, Comparator.comparingInt(TestClass::getI));*/
 
-        TestClass t = new TestClass(55);
+        //вариант 2
+        //класс, который хранится в колекции
+        //должен реализовавывать интерфейс Comparable
+        Collections.sort(list);
 
-        set.add(new TestClass(55));
-        set.add(new TestClass(55));
-        set.add(new TestClass(55));
+        /*
+            2 метода
+            1 более подходит если у вас много различных правил для сортировки
+            2 подходит если колекция с выбранным типом всегда сортируется одинаково
+         */
 
-
-        /*set.add(t);
-        set.add(t);
-        set.add(t);*/
-
-
-        set.add(new TestClass());
-        set.add(new TestClass());
-        set.add(new TestClass());
-        set.add(new TestClass());
-
-        System.out.println(set);
+        System.out.println(list);
     }
 }
 
-class TestClass
+class TestClass implements Comparable<TestClass>
 {
     private int i;
 
@@ -108,6 +63,11 @@ class TestClass
         this(new Random().nextInt(1000));
     }
 
+    @Override
+    public int compareTo(TestClass o) {
+        return Integer.compare(this.i, o.getI());
+    }
+
     /*
 
         Так как мы не можем сравнить сложные объекты через ==
@@ -116,6 +76,7 @@ class TestClass
         сгенерировать готовые методы для сравнения с учетом полей
 
      */
+
 
     @Override
     public boolean equals(Object o) {
