@@ -1,6 +1,7 @@
 package org.brovushka.app;
 
 import org.brovushka.app.manager.ProductEntityManager;
+import org.brovushka.app.manager.ProductSaleEntityManager;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,7 +12,8 @@ public class Application
 {
     public static void main(String[] args) throws SQLException
     {
-        System.out.println(ProductEntityManager.getAll());
+        //System.out.println(ProductEntityManager.getAll());
+        System.out.println(ProductSaleEntityManager.getAll());
     }
 
     public static Connection getConnection() throws SQLException {
